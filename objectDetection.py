@@ -13,7 +13,7 @@ args = vars(ap.parse_args())
 # define the lower and upper boundaries of the "green"
 # ball in the HSV color space, then initialize the
 # list of tracked points
-lower_color = np.array([0, 200, 150], dtype=np.uint8)
+lower_color = np.array([0, 200, 50], dtype=np.uint8)
 upper_color = np.array([50, 255, 255], dtype=np.uint8)
 pts = deque(maxlen=64)
 camera = cv2.VideoCapture(args["Video"])
@@ -40,6 +40,7 @@ while True:
     mask = cv2.inRange(hsv, lower_color, upper_color)
     mask = cv2.erode(mask, None, iterations=2)
     mask = cv2.dilate(mask, None, iterations=2)
+    mask = cv2.medianBlur(mask, 15)
     cv2.imshow("mask", mask)
 
     # find contours in the mask and initialize the current
@@ -79,7 +80,7 @@ while True:
         # otherwise, compute the thickness of the line and
         # draw the connecting lines
         thickness = int(np.sqrt(64 / float(i + 1)) * 2.5)
-        cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
+        cv2.line(frame, pts[i - 1], pts[i], (255, 0, 0), thickness)
     
     # show the frame to our screen
     cv2.imshow("Frame", frame)

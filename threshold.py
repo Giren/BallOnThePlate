@@ -1,27 +1,33 @@
 import cv2
 import numpy as np
 
+DEFAULT_H1=0
+DEFAULT_S1=161
+DEFAULT_V1=183
+DEFAULT_H2=181
+DEFAULT_S2=255
+DEFAULT_V2=255
+
 cam_index=int(raw_input("Enter Camera Index : "))
 cap = cv2.VideoCapture(cam_index)
 def nothing(x):
     pass
 
-
-cv2.namedWindow('image')
-
+cv2.namedWindow('image',flags=cv2.WINDOW_NORMAL)
 # create trackbars for color change
-cv2.createTrackbar('h1','image',0,255,nothing)
-cv2.createTrackbar('s1','image',0,255,nothing)
-cv2.createTrackbar('v1','image',0,255,nothing)
+cv2.createTrackbar('h1','image',DEFAULT_H1,255,nothing)
+cv2.createTrackbar('s1','image',DEFAULT_S1,255,nothing)
+cv2.createTrackbar('v1','image',DEFAULT_V1,255,nothing)
 
-cv2.createTrackbar('h2','image',0,255,nothing)
-cv2.createTrackbar('s2','image',0,255,nothing)
-cv2.createTrackbar('v2','image',0,255,nothing)
+cv2.createTrackbar('h2','image',DEFAULT_H2,255,nothing)
+cv2.createTrackbar('s2','image',DEFAULT_S2,255,nothing)
+cv2.createTrackbar('v2','image',DEFAULT_V2,255,nothing)
 
 
 while(1):
   _, frame = cap.read()
-  frame=cv2.resize(frame,(512,384))
+  frame=cv2.resize(frame,(600,480))
+  frame=cv2.medianBlur(frame, 5)
   # Convert BGR to HSV
   hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
   h1 = cv2.getTrackbarPos('h1','image')
@@ -39,8 +45,6 @@ while(1):
 
   cv2.imshow('frame',frame)
   cv2.imshow('thresh',mask)
-
-
 
   k = cv2.waitKey(5) & 0xFF
   if k == 27:

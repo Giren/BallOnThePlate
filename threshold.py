@@ -18,9 +18,7 @@ h2 = config.highRange[0]
 s2 = config.highRange[1]
 v2 = config.highRange[2]
 
-
-cv2.namedWindow('image')
-
+cv2.namedWindow('image',flags=cv2.WINDOW_NORMAL)
 # create trackbars for color change
 cv2.createTrackbar('h1','image', h1, 255, persist_values)
 cv2.createTrackbar('s1','image', s1, 255, persist_values)
@@ -30,10 +28,10 @@ cv2.createTrackbar('h2','image', h2, 255, persist_values)
 cv2.createTrackbar('s2','image', s2, 255, persist_values)
 cv2.createTrackbar('v2','image', v2, 255, persist_values)
 
-
 while(1):
   _, frame = cap.read()
-  frame=cv2.resize(frame,(512,384))
+  frame=cv2.resize(frame,(600,480))
+  frame=cv2.medianBlur(frame, 5)
   # Convert BGR to HSV
   hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
   h1 = cv2.getTrackbarPos('h1','image')
@@ -51,8 +49,6 @@ while(1):
 
   cv2.imshow('frame',frame)
   cv2.imshow('thresh',mask)
-
-
 
   k = cv2.waitKey(5) & 0xFF
   if k == 27:

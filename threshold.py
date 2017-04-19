@@ -1,28 +1,32 @@
 import cv2
 import numpy as np
-
-DEFAULT_H1=0
-DEFAULT_S1=161
-DEFAULT_V1=183
-DEFAULT_H2=181
-DEFAULT_S2=255
-DEFAULT_V2=255
+import RangeConfig
 
 cam_index=int(raw_input("Enter Camera Index : "))
 cap = cv2.VideoCapture(cam_index)
-def nothing(x):
-    pass
+
+def persist_values(x):
+    config.set_low_range(h1, s1, v1)
+    config.set_high_range(h2, s2, v2)
+
+config = RangeConfig.RangeConfig("./config.ini")
+h1 = config.lowRange[0]
+s1 = config.lowRange[1]
+v1 = config.lowRange[2]
+
+h2 = config.highRange[0]
+s2 = config.highRange[1]
+v2 = config.highRange[2]
 
 cv2.namedWindow('image',flags=cv2.WINDOW_NORMAL)
 # create trackbars for color change
-cv2.createTrackbar('h1','image',DEFAULT_H1,255,nothing)
-cv2.createTrackbar('s1','image',DEFAULT_S1,255,nothing)
-cv2.createTrackbar('v1','image',DEFAULT_V1,255,nothing)
+cv2.createTrackbar('h1','image', h1, 255, persist_values)
+cv2.createTrackbar('s1','image', s1, 255, persist_values)
+cv2.createTrackbar('v1','image', v1, 255, persist_values)
 
-cv2.createTrackbar('h2','image',DEFAULT_H2,255,nothing)
-cv2.createTrackbar('s2','image',DEFAULT_S2,255,nothing)
-cv2.createTrackbar('v2','image',DEFAULT_V2,255,nothing)
-
+cv2.createTrackbar('h2','image', h2, 255, persist_values)
+cv2.createTrackbar('s2','image', s2, 255, persist_values)
+cv2.createTrackbar('v2','image', v2, 255, persist_values)
 
 while(1):
   _, frame = cap.read()

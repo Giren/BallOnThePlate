@@ -1,9 +1,12 @@
 import cv2
 import numpy as np
 import RangeConfig
+import calibration
 
 cam_index=int(raw_input("Enter Camera Index : "))
 cap = cv2.VideoCapture(cam_index)
+
+calibration.doCalibration(cap)
 
 def persist_values(x):
     config.set_low_range(h1, s1, v1)

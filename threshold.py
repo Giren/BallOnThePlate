@@ -1,3 +1,4 @@
+from collections import deque
 import cv2
 import numpy as np
 import RangeConfig
@@ -31,9 +32,11 @@ cv2.createTrackbar('h2','image', h2, 255, persist_values)
 cv2.createTrackbar('s2','image', s2, 255, persist_values)
 cv2.createTrackbar('v2','image', v2, 255, persist_values)
 
+pts = deque(maxlen=64)
+
 while(1):
   _, frame = cap.read()
-  frame=cv2.resize(frame,(600,480))
+  frame=cv2.resize(frame,(300,280))
   frame=cv2.medianBlur(frame, 5)
   # Convert BGR to HSV
   hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -49,6 +52,29 @@ while(1):
   upper = np.array([h2,s2,v2])
   # Threshold the HSV image to get only blue colors
   mask = cv2.inRange(hsv, lower, upper)
+  cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
+  center = None
+
+  # only proceed if at least one contour was found
+  if len(cnts) > 0:
+    # find the largest contour in the mask, then use
+    # it to compute the minimum enclosing circle and
+    # centroid
+    c = max(cnts, key=cv2.contourArea)
+    ((x, y), radius) = cv2.minEnclosingCircle(c)
+    M = cv2.moments(c)
+    if M["m00"] != 0:
+      center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+
+      # only proceed if the radius meets a minimum size
+      if radius > 10:
+      #  # draw the circle and centroid on the frame,
+      #  # then update the list of tracked points
+      #  cv2.circle(frame, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+        cv2.circle(frame, center, 5, (0, 0, 255), -1)
+      # update the points queue
+      pts.appendleft(center)
+
 
   cv2.imshow('frame',frame)
   cv2.imshow('thresh',mask)

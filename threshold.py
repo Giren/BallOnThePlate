@@ -36,7 +36,7 @@ pts = deque(maxlen=64)
 
 while(1):
   _, frame = cap.read()
-  frame=cv2.resize(frame,(300,280))
+  frame=cv2.resize(frame,(600,480))
   frame=cv2.medianBlur(frame, 5)
   # Convert BGR to HSV
   hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)

@@ -32,6 +32,8 @@ cv2.createTrackbar('h2','image', h2, 255, persist_values)
 cv2.createTrackbar('s2','image', s2, 255, persist_values)
 cv2.createTrackbar('v2','image', v2, 255, persist_values)
 
+cv2.ocl.setUseOpenCL(False)
+
 while(1):
   _, frame = cap.read()
   frame=cv2.resize(frame,(600,480))

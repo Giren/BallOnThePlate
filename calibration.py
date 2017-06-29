@@ -3,11 +3,13 @@ import numpy as np
 
 points = []
 
+
 def doCalibration(cap):
     global points
+    cv2.namedWindow('calibration')
+    cv2.setMouseCallback('calibration',setReferencePoints)
     while(1):
         _, calibrationFrame = cap.read()
-        cv2.setMouseCallback('calibration',setReferencePoints)
         calibrationFrame=cv2.resize(calibrationFrame,(600,480))
         
         k = cv2.waitKey(5) & 0xFF

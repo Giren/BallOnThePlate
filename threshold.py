@@ -32,8 +32,6 @@ cv2.createTrackbar('h2','image', h2, 255, persist_values)
 cv2.createTrackbar('s2','image', s2, 255, persist_values)
 cv2.createTrackbar('v2','image', v2, 255, persist_values)
 
-pts = deque(maxlen=64)
-
 while(1):
   _, frame = cap.read()
   frame=cv2.resize(frame,(600,480))
@@ -72,8 +70,6 @@ while(1):
       #  # then update the list of tracked points
       #  cv2.circle(frame, (int(x), int(y)), int(radius), (0, 255, 255), 2)
         cv2.circle(frame, center, 5, (0, 0, 255), -1)
-      # update the points queue
-      pts.appendleft(center)
 
 
   cv2.imshow('frame',frame)
